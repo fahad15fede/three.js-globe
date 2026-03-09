@@ -62,7 +62,7 @@ src/
  ├─ countries.json       # Country boundary data
 🔗 References
 
-YouTube Tutorial: Interactive 3D Globe with Three.js
+YouTube Tutorial: [Interactive 3D Globe with Three.js](https://youtu.be/f4zncVufL_I?si=V0hIZ1EmRfay9DXU)
 
 Three.js Documentation: https://threejs.org/docs
 
