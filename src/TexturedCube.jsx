@@ -41,10 +41,10 @@ function TexturedCube() {
         const loader = new THREE.TextureLoader();
 
         const texturePaths = [
-            `src/assets/class.png`,
+            `src/assets/my_pic.png`,
             `src/assets/greet.png`,
             `src/assets/name.png`,
-            `src/assets/class.png`,
+            `src/assets/seat no.png`,
             `src/assets/greet.png`,
             `src/assets/name.png`,
         ];
@@ -71,9 +71,9 @@ function TexturedCube() {
         const animate = () => {
             requestAnimationFrame(animate);
 
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-            cube.rotation.z += 0.01;
+            cube.rotation.x += 0.008;
+            cube.rotation.y += 0.008;
+            cube.rotation.z += 0.008;
 
             renderer.render(scene, camera);
         };

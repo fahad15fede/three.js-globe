@@ -5,6 +5,6 @@ import App from './App.jsx'
 import App2 from './App2.jsx'
 
 createRoot(document.getElementById('root')).render(
-    // <App2/>
-    <App/>
+    <App2/>
+    // <App/>
 )
