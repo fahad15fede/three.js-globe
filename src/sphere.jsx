@@ -80,12 +80,95 @@ function Sphere() {
         const stars = createStarfield();
         scene.add(stars);
 
-        const countries = drawThreeGeo(countriesData, 3, "sphere", {
-            color: 0x18960f,
+        // const countries = drawThreeGeo(countriesData, 3, "sphere", {
+        //     color: 0x18960f,
+        // });
+
+        const group = new THREE.Group();
+
+        countriesData.features.forEach((feature) => {
+
+            let color = 0x1ff60f;
+            
+            if(feature.properties.iso_a3 === "PAK"){
+                const centre = getCountryCenter(feature)
+                color = 0xff0000; //hightling pakistan
+                addCountryLabel(
+                    "Pakistan",
+                    centre.lat+25,
+                    centre.lon-14,
+                    3.1
+                );
+                console.log(centre.lat,centre.lon);
+            }
+            if(feature.properties.name === "Palestine"){
+                const centre = getCountryCenter(feature)
+                color = 0x0000ff; //hightling India
+                addCountryLabel(
+                    feature.properties.name,
+                    centre.lat-3,
+                    centre.lon,
+                    3.1
+                );
+                console.log(centre.lat,centre.lon);
+            }
+            
+            drawThreeGeo(
+                feature,
+                3,
+                "sphere",
+                {color: color},
+                group
+            );
+            
         });
 
-        countries.rotation.x = -Math.PI / 2;
-        scene.add(countries);
+        function getCountryCenter(feature){
+
+            const cord = feature.geometry.coordinates[0];
+
+            let lonSum = 0;
+            let latSum = 0;
+
+            cord.forEach(point =>{
+                lonSum+=point[0];
+                latSum+=point[1];
+            });
+
+            return{
+                lon:lonSum/cord.length,
+                lat: latSum / cord.length
+            };
+        }
+
+        function addCountryLabel(text, lat, lon, radius){
+            const canvas = document.createElement("canvas");
+            canvas.width = 512;
+            canvas.height = 128;
+
+            const ctx = canvas.getContext("2d");
+            ctx.font = "Bold 40px Poppins";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText(text, canvas.width/2, canvas.height/3*2); //draws the text
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({map:texture, transparent:true});
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(1.5,0.4, 1);
+
+            const phi = (90-lat)* (Math.PI/180);
+            const theta = (lon+180) * (Math.PI/180);
+
+            sprite.position.x = -(radius*Math.sin(phi)*Math.cos(theta));
+            sprite.position.y = radius*Math.cos(phi);
+            sprite.position.z = -(radius*Math.sin(phi)*Math.sin(theta));
+            group.add(sprite);
+        }
+
+        
+        group.rotation.x = -Math.PI / 2;
+        scene.add(group);
 
         let rotateX = false;
 
@@ -107,9 +190,10 @@ function Sphere() {
         const animate = () => {
             requestAnimationFrame(animate);
 
+            
             if (rotateX) {
                 line.rotation.y += 0.01;
-                countries.rotation.z += 0.01;
+                group.rotation.z += 0.01;
             }
 
             controls.update();
